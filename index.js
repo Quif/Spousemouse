@@ -13,10 +13,10 @@ io.on('connection', (socket) => {
         console.log("New mouse movement!")
     });
     socket.on('wave', function(){
-        io.emit('wave')
+        socket.broadcast.emit('wave')
     })
     socket.on('disconnected', (evt) => {
         console.log('disconnected')
     })
-    io.emit('online')
+    socket.broadcast.emit('online')
 })
