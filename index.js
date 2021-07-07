@@ -8,8 +8,8 @@ const io = require('socket.io')(server)
 io.on('connection', (socket) => {
     console.log('New connection!')
     socket.on('mouseMovement', function(data){
-        io.emit('mouseMovement', data)
-        io.emit('movementAlert')
+        socket.broadcast.emit('mouseMovement', data)
+        socket.broadcast.emit('movementAlert')
         console.log("New mouse movement!")
     });
     socket.on('wave', function(){
