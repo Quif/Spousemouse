@@ -6,7 +6,7 @@ const server = app.listen(port, () => console.log(`server listening on port: ${p
 
 const io = require('socket.io')(server)
 io.on('connection', (socket) => {
-    console.log('connected')
+    console.log('sht my pants')
     io.emit('online', 'Someone else connected!')
     setInterval(function (){
         io.emit("still connected")
