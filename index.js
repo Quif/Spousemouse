@@ -6,14 +6,13 @@ const server = app.listen(port, () => console.log(`server listening on port: ${p
 
 const io = require('socket.io')(server)
 io.on('connection', (socket) => {
-    console.log('sht my pants')
+    console.log('New connection!')
     socket.on('mouseMovement', function(data){
-        console.log("poo")
         io.emit('sentMovement', data)
-        io.emit('movementAlert', 'Someone just sent a new mouse movement!')
+        io.emit('movementAlert')
     });
     socket.on('disconnected', (evt) => {
         console.log('disconnected')
     })
-    io.emit('online', 'Someone else connected!')
+    io.emit('online')
 })
