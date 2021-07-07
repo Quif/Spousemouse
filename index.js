@@ -8,6 +8,9 @@ const io = require('socket.io')(server)
 io.on('connection', (socket) => {
     console.log('connected')
     io.emit('online', 'Someone else connected!')
+    setInterval(function (){
+        io.emit("still connected")
+    }, 1000)
 })
 io.on('mouseMovement', function(data){
     console.log("poo")
