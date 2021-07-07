@@ -1,8 +1,7 @@
-var express = require('express'),
-    app = express(),
-    server = require('http').createServer(app),
-    io = require('socket.io').listen(server),
-    port = process.env.PORT || 3000
+var port = process.env.PORT || 3000
+const server = express()
+
+const io = socketIO(server);
 io.on('connection', (socket) => {
     console.log('connected')
     io.emit('online', 'Someone else connected!')
