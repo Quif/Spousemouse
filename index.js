@@ -1,5 +1,5 @@
 const http = require('http').createServer();
-const io = require('socket.io')(server);
+const io = require('socket.io')(http);
 const port = 3000
 io.on('connection', (socket) => {
     log('connected')
