@@ -7,4 +7,4 @@ io.on('connection', (socket) => {
 io.on('disconnect', (evt) => {
     log('disconnected')
 })
-http.listen(port, () => log(`server listening on port: ${port}`))
+http.listen(port, () => console.log(`server listening on port: ${port}`))
