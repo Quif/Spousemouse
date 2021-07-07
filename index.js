@@ -4,6 +4,7 @@ const port = process.env.PORT || 3000
 io.on('connection', (socket) => {
     console.log('connected')
     io.emit('online', 'Someone else connected!')
+    io.emit('port', process.env.PORT || 3000)
 })
 io.on('mouseMovement', function(data){
     console.log("poo")
