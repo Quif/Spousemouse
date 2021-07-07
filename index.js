@@ -8,10 +8,13 @@ const io = require('socket.io')(server)
 io.on('connection', (socket) => {
     console.log('New connection!')
     socket.on('mouseMovement', function(data){
-        io.emit('sentMovement', data)
+        io.emit('mouseMovement', data)
         io.emit('movementAlert')
         console.log("New mouse movement!")
     });
+    socket.on('wave', function(){
+        io.emit('wave')
+    })
     socket.on('disconnected', (evt) => {
         console.log('disconnected')
     })
