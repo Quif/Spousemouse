@@ -1,10 +1,11 @@
-const http = require('http').createServer();
-const io = require('socket.io')(http);
-const port = process.env.PORT || 3000
+var express = require('express'),
+    app = express(),
+    server = require('http').createServer(app),
+    io = require('socket.io').listen(server),
+    port = process.env.PORT || 3000
 io.on('connection', (socket) => {
     console.log('connected')
     io.emit('online', 'Someone else connected!')
-    io.emit('port', process.env.PORT || 3000)
 })
 io.on('mouseMovement', function(data){
     console.log("poo")
@@ -14,4 +15,4 @@ io.on('mouseMovement', function(data){
 io.on('disconnect', (evt) => {
     console.log('disconnected')
 })
-http.listen(port, () => console.log(`server listening on port: ${port}`))
+server.listen(port, () => console.log(`server listening on port: ${port}`))
