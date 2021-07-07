@@ -18,5 +18,6 @@ io.on('disconnected', (evt) => {
     console.log('disconnected')
 })
 setInterval(function (){
+    console.log("hai")
     io.emit("still connected")
 }, 1000)
