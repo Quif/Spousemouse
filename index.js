@@ -7,17 +7,13 @@ const server = app.listen(port, () => console.log(`server listening on port: ${p
 const io = require('socket.io')(server)
 io.on('connection', (socket) => {
     console.log('sht my pants')
+    socket.on('mouseMovement', function(data){
+        console.log("poo")
+        io.emit('sentMovement', data)
+        io.emit('movementAlert', 'Someone just sent a new mouse movement!')
+    });
+    socket.on('disconnected', (evt) => {
+        console.log('disconnected')
+    })
     io.emit('online', 'Someone else connected!')
 })
-io.on('mouseMovement', function(data){
-    console.log("poo")
-    io.emit('sentMovement', data)
-    io.emit('movementAlert', 'Someone just sent a new mouse movement!')
-});
-io.on('disconnected', (evt) => {
-    console.log('disconnected')
-})
-setInterval(function (){
-    console.log("hai")
-    io.emit("still connected")
-}, 1000)
