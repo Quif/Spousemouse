@@ -1,10 +1,10 @@
 const express = require('express');
-const socketIO = require('socket.io');
 
 var port = process.env.PORT || 3000
-const server = express()
+const app = express()
+app.listen(port, () => console.log(`server listening on port: ${port}`))
 
-const io = socketIO(server);
+const io = require('socket.io')(server)
 io.on('connection', (socket) => {
     console.log('connected')
     io.emit('online', 'Someone else connected!')
@@ -17,4 +17,3 @@ io.on('mouseMovement', function(data){
 io.on('disconnect', (evt) => {
     console.log('disconnected')
 })
-server.listen(port, () => console.log(`server listening on port: ${port}`))
