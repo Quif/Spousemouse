@@ -10,6 +10,7 @@ io.on('connection', (socket) => {
     socket.on('mouseMovement', function(data){
         io.emit('sentMovement', data)
         io.emit('movementAlert')
+        console.log("New mouse movement!")
     });
     socket.on('disconnected', (evt) => {
         console.log('disconnected')
