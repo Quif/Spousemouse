@@ -7,7 +7,7 @@ var FPS = 100; // FPS OF RECORDING (MAXED AT 100)
 
 var robot = require("robotjs");
 var fs = require('fs');
-var server = "";
+var settings;
 var chalk = require("chalk");
 
 const readline = require("readline");
@@ -18,8 +18,8 @@ const rl = readline.createInterface({
 });
 
 try {
-  const data = fs.readFileSync(__dirname + '/settings.txt', 'utf8')
-  server = data
+  const data = fs.readFileSync(__dirname + '/settings.json', 'utf8')
+  settings = JSON.parse(data)
 } catch (err) {
   console.error(err)
 }
@@ -31,7 +31,7 @@ const io = require("socket.io-client");
 awaitConnection()
 
 function awaitConnection(){
-  if(server != ""){
+  if(settings){
     start()
   } else{
     awaitConnection()
@@ -39,7 +39,7 @@ function awaitConnection(){
 }
 
 function start(){
-const socket = io(server);
+const socket = io(settings.server);
 
 socket.on("mouseMovement", function (data) {
   if (data.length > maxLength * FPS) {

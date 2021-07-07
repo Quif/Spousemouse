@@ -1,0 +1,3 @@
+{
+    "server": "ws://mouse-controllers.herokuapp.com" // Put your own server domain or ip here !
+}
