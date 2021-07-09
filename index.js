@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 console.clear();
 // == SETTINGS ==
 var maxLength = 10; // MAX LENGTH (IN SECONDS)
@@ -7,7 +9,9 @@ var FPS = 100; // FPS OF RECORDING (MAXED AT 100)
 
 var robot = require("robotjs");
 var fs = require('fs');
+var path = require('path');
 var settings;
+var roomID;
 var chalk = require("chalk");
 
 const readline = require("readline");
@@ -18,7 +22,7 @@ const rl = readline.createInterface({
 });
 
 try {
-  const data = fs.readFileSync(__dirname + '/settings.json', 'utf8')
+  const data = fs.readFileSync(path.join(__dirname + '/settings.json'), 'utf8')
   settings = JSON.parse(data)
 } catch (err) {
   console.error(err)
@@ -32,12 +36,17 @@ awaitConnection()
 
 function awaitConnection(){
   if(settings){
-    start()
+    rl.question(chalk.cyan("What's the room ID? \n") + chalk.grey("(To make a new room just type a unique room ID) \n"), (answer) => {
+      roomID = answer
+      start()
+    })
   } else{
     awaitConnection()
   }
 }
 
+
+var onlineUsers = [];
 function start(){
 const socket = io(settings.server);
 
@@ -49,7 +58,7 @@ socket.on("mouseMovement", function (data) {
 });
 
 socket.on("disconnected", function () {
-  socket.emit("disconnect");
+  console.log(chalk.rgb(186, 66, 50)("Someone has disconnected!"));
 });
 
 socket.on("online", function (data) {
@@ -65,27 +74,34 @@ socket.on("wave", function (data) {
 });
 
 socket.on("connect", () => {
-  console.log(chalk.greenBright("SUCCESSFULLY CONNECTED"));
+  socket.emit("roomID", roomID);
+});
+
+socket.on("serverInfo", (data) => {
+  onlineUsers = data.onlineUsers;
+  console.clear();
+  console.log(chalk.greenBright("Connected to " + data.name) + chalk.rgb(198, 3, 252)("\nRoom: " + roomID) + "\n" + chalk.rgb(252, 186, 3)(onlineUsers.length + " user(s) online") + 
+  chalk.cyanBright("\nType ") +
+  chalk.cyanBright.underline.italic("mouse") +
+  chalk.cyanBright(" to send a mouse movement or ") +
+  chalk.cyanBright.underline.italic("wave") +
+  chalk.cyanBright(" to say hi to others!"));
   GET_MESSAGE();
 });
 
 function GET_MESSAGE() {
   var arr = [];
-  rl.question(
-    chalk.cyanBright("Type ") +
-      chalk.cyanBright.underline.italic("mouse") +
-      chalk.cyanBright(" to send a mouse movement or ") +
-      chalk.cyanBright.underline.italic("wave") +
-      chalk.cyanBright(" to say hi to others! \n"),
+  if(onlineUsers){
+  rl.question("",
     (answer) => {
       if (answer.toLowerCase().includes("mouse")) {
-        rl.question(chalk.cyan("How many seconds? \n"), (answer) => {
+        rl.question(chalk.cyan("How many seconds?\n"), (answer) => {
           var writing = setInterval(function () {
             var mouse = robot.getMousePos();
             arr.push([mouse.x, mouse.y]);
           }, 1000 / FPS);
           setTimeout(function () {
-            console.log("Sent!");
+            console.log(chalk.red("Sent!"));
             socket.emit("mouseMovement", arr);
             GET_MESSAGE();
           }, answer * 1000);
@@ -99,6 +115,7 @@ function GET_MESSAGE() {
       }
     }
   );
+  } else { GET_MESSAGE() }
 }
 function read(dataa) {
   var long = 0;
